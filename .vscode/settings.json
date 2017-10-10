@@ -1,0 +1,11 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+    "files.exclude": {
+    "**/*.meta": true,
+    "**/*.pyc": true
+  },
+  "python.unitTest.unittestEnabled": false,
+  "python.unitTest.promptToConfigure": false,
+  "python.unitTest.pyTestEnabled": false,
+  "python.unitTest.nosetestsEnabled": false
+}
