@@ -1,9 +1,4 @@
-# !/usr/bin/python2.7
 # -*- coding: UTF-8 -*-
-
-#python -Wd -tt -3 "$(#1)"
-from __future__ import division
-from __future__ import print_function
 
 import json
 import sys
@@ -21,14 +16,16 @@ def Add( s, n ):
 if len(sys.argv) >= 3:
     inFile = sys.argv[1]
     outFile = sys.argv[2]
+    prettyXmlOutput = True
 else:
     inFile = '/storage/emulated/0/Download/takeout.zip'
     outFile = '/storage/emulated/0/Android/data/net.osmand.plus/files/tracks/import/GoogleMapsExport.gpx'
+    prettyXmlOutput = False #toprettyxml is broken for QPython3
 
 if inFile.endswith('.zip'):
     archive = zipfile.ZipFile(inFile, 'r')
-    contents = archive.read(u'Takeout/Карты (ваши отзывы и места)/Сохраненные места.json')
-    src = json.loads(contents)
+    contents = archive.read('Takeout/Карты (ваши отзывы и места)/Сохраненные места.json')
+    src = json.loads(contents.decode())
 else:
     with open(inFile) as json_file:
         src = json.load(json_file)
@@ -58,10 +55,11 @@ for f in src["features"]:
     desc = Add(desc, props.get("Updated"))
     ET.SubElement(wpt, 'desc').text = desc.strip()
 
-#tree.write(sys.argv[2], encoding="UTF-8", xml_declaration=True)
-
-xmlstr = minidom.parseString(ET.tostring(root)).toprettyxml(indent="   ")
-with open(outFile, "w") as f:
-    f.write(xmlstr.encode('utf-8'))
+if not prettyXmlOutput:
+    tree.write(outFile, encoding="UTF-8", xml_declaration=True)
+else:
+    xmlstr = minidom.parseString(ET.tostring(root)).toprettyxml(indent="   ")
+    with open(outFile, "w", encoding="UTF-8") as f:
+        f.write(xmlstr)
 
 print( "Converted {} elements".format(len(root.getchildren())) )
