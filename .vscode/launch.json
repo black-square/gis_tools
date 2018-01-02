@@ -9,7 +9,7 @@
             "pythonPath": "${config:python.pythonPath}",
             "program": "${workspaceRoot}/json2gpx.py",
             "args": [
-                "Сохраненные места.json", 
+                "takeout.zip", 
                 "GoogleMapsExport.gpx"
             ],
             "cwd": "${workspaceRoot}",
