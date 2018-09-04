@@ -9,8 +9,8 @@
             "pythonPath": "${config:python.pythonPath}",
             "program": "${workspaceRoot}/json2gpx.py",
             "args": [
-                "takeout.zip", 
-                "GoogleMapsExport.gpx"
+                "~/Downloads", 
+                "~/Downloads/GoogleMapsExport.gpx"
             ],
             "cwd": "${workspaceRoot}",
             "debugOptions": [

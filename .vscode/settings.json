@@ -8,5 +8,5 @@
   "python.unitTest.promptToConfigure": false,
   "python.unitTest.pyTestEnabled": false,
   "python.unitTest.nosetestsEnabled": false,
-  "python.pythonPath": "/usr/local/bin/python3"
+  "python.pythonPath": "python3",
 }
