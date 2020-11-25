@@ -25,15 +25,15 @@ def Distance(coords1, coords2):
 Label = namedtuple("Label", ["coords", "props"])
 
 class Labels:
-    MaxDistance = 3
+    MaxDistance = 10
 
     def __init__( self, fileContents ):
         src = json.loads(fileContents.decode())
-        self.data = [Label(f['geometry']['coordinates'], f['properties']) for f in src["features"]]
+        self.data = [Label(f['geometry']['coordinates'][::-1], f['properties']) for f in src["features"]]
 
     def ExtractReplacement(self, coords):
         for i, l in enumerate(self.data):
-            if  Distance( l.coords, coords) <= self.MaxDistance:
+            if  Distance(l.coords, coords) <= self.MaxDistance:
                 del self.data[i]
                 return l.props
 
@@ -108,6 +108,9 @@ def WriteXML(tree, outFile, prettyXmlOutput):
         with open(outFile, "w", encoding="UTF-8") as f:
             f.write(xmlstr)
 
+def ExpandPath( path ):
+    return os.path.expandvars( os.path.expanduser(path) )
+
 def main():
     if len(sys.argv) >= 3:
         srcPath = sys.argv[1]
@@ -117,6 +120,9 @@ def main():
         srcPath = '/storage/emulated/0/Download/'
         outFile = '/storage/emulated/0/Android/data/net.osmand.plus/files/tracks/import/GoogleMapsExport.gpx'
         prettyXmlOutput = False #toprettyxml is broken for QPython3
+
+    srcPath = ExpandPath(srcPath)
+    outFile = ExpandPath(outFile)
 
     srcFile = FindFile(srcPath)
 
@@ -142,9 +148,10 @@ def main():
         pi = PointInfo.FromPointAndLabel(f['properties'], label)
         ExportPoint(root, coords, pi)
 
-    print("{} labels haven't been merged".format(len(labels.data)))
+    print("{} labels haven't been merged:".format(len(labels.data)))
 
     for l in labels.data:
+        print("   {}: {}".format(l.props["name"], l.coords))
         pi = PointInfo.FromLabel(l.props)
         ExportPoint(root, l.coords, pi)
 
