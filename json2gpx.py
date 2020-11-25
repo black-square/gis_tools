@@ -123,9 +123,9 @@ def main():
     print( "Loading from '{}'".format(srcFile) )
 
     archive = zipfile.ZipFile(srcFile, 'r')
-    contents = archive.read('Takeout/Карты (ваши отзывы и места)/Сохраненные места.json')
+    contents = archive.read('Takeout/Maps (your places)/Saved Places.json')
     src = json.loads(contents.decode())
-    contents = archive.read('Takeout/Карты/Места с ярлыками/Места с ярлыками.json')
+    contents = archive.read('Takeout/Maps/My labeled places/Labeled places.json')
 
     labels = Labels(contents)
     pointsRoot = src["features"]
