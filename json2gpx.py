@@ -111,6 +111,15 @@ def WriteXML(tree, outFile, prettyXmlOutput):
 def ExpandPath( path ):
     return os.path.expandvars( os.path.expanduser(path) )
 
+def ReadAtLeastOneFromArchive(archive, fileList):
+    for file in fileList:
+        try:
+            return archive.read(file)
+        except KeyError as e:
+            print( str(e) )
+    
+    raise KeyError( "None file from the list has been found: " + str(fileList))
+
 def main():
     if len(sys.argv) >= 3:
         srcPath = sys.argv[1]
@@ -129,11 +138,20 @@ def main():
     print( "Loading from '{}'".format(srcFile) )
 
     archive = zipfile.ZipFile(srcFile, 'r')
-    contents = archive.read('Takeout/Maps (your places)/Saved Places.json')
+    contents = ReadAtLeastOneFromArchive(archive, [
+        'Takeout/Maps (your places)/Saved Places.json',
+        'Takeout/Карты (ваши места)/Сохраненные места.json' 
+    ])
+
     src = json.loads(contents.decode())
-    contents = archive.read('Takeout/Maps/My labeled places/Labeled places.json')
+
+    contents = ReadAtLeastOneFromArchive(archive, [
+        'Takeout/Maps/My labeled places/Labeled places.json',
+        'Takeout/Карты/Места с ярлыками/Места с ярлыками.json'
+    ])
 
     labels = Labels(contents)
+    
     pointsRoot = src["features"]
 
     print("Loaded {} points and {} labels".format(len(pointsRoot), len(labels.data)))
