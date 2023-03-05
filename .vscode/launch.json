@@ -9,8 +9,8 @@
             "python": "${command:python.interpreterPath}",
             "program": "${workspaceRoot}/json2gpx.py",
             "args": [
-                "~/Downloads", 
-                "~/Downloads/GoogleMapsExport.gpx"
+                "%userprofile%/Downloads/", 
+                "%userprofile%/Downloads/GoogleMapsExport.gpx"
             ],
             "cwd": "${workspaceRoot}",
             "debugOptions": [
@@ -22,13 +22,22 @@
             "name": "Python",
             "type": "python",
             "request": "launch",
-            "stopOnEntry": true,
+            "stopOnEntry": false,
             "python": "${command:python.interpreterPath}",
             "program": "${file}",
-            "cwd": "${workspaceRoot}",
+            "cwd": "%userprofile%/Downloads",
+            "args": [
+            "--get_address", 
+            "--to_csv", "out.csv",
+            "2022-12-26 17-13-23.JPG", 
+            "2022-12-26 16-03-55.JPG", 
+            "2023-03-04 15-03-04.JPG",
+            "2022-12-26 15-02-22.JPG",
+            "2022-12-26 16-17-39.JPG" ],
+            "purpose": ["debug-in-terminal"],
             "debugOptions": [
                 "WaitOnAbnormalExit",
-                "WaitOnNormalExit",
+                //"WaitOnNormalExit",
                 "RedirectOutput"
             ]
         },
