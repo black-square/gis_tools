@@ -5,30 +5,16 @@ import json
 import sys
 import glob
 import xml.etree.ElementTree as ET
-from xml.dom import minidom
 from collections import namedtuple
 import zipfile
-import math
 import re
 import urllib.request
 import util
 
+#https://developers.google.com/maps/billing-and-pricing/billing
 GOOGLE_MAPS_KEY = None
 GOOGLE_MAPS_PLACES_CACHE_FILE="~/.google_maps_places_cache.json"
 GOOGLE_MAPS_PLACES_CACHE = {}
-
-
-def Distance(coords1, coords2):
-    #https://stackoverflow.com/a/21623206/3415353
-    p = 0.017453292519943295     #Pi/180
-
-    lat1 = coords1[0] * p
-    lon1 = coords1[1] * p
-    lat2 = coords2[0] * p
-    lon2 = coords2[1] * p
-
-    a = math.cos(lat2 - lat1) - math.cos(lat1) * math.cos(lat2) * (1 - math.cos(lon2 - lon1))
-    return 12742000 * math.asin(math.sqrt(((1 - a) * 0.5))) #2*R*asin...
 
 Label = namedtuple("Label", ["coords", "props"])
 
@@ -41,7 +27,7 @@ class Labels:
 
     def ExtractReplacement(self, coords):
         for i, l in enumerate(self.data):
-            if  Distance(l.coords, coords) <= self.MaxDistance:
+            if  util.Distance(l.coords, coords) <= self.MaxDistance:
                 del self.data[i]
                 return l.props
 
@@ -112,17 +98,6 @@ def FindFile( path ):
 
     raise EnvironmentError("Nothing has been found on path '{}'".format(path))
 
-def WriteXML(tree, outFile, prettyXmlOutput):
-    if not prettyXmlOutput:
-        tree.write(outFile, encoding="UTF-8", xml_declaration=True)
-    else:
-        xmlstr = minidom.parseString(ET.tostring(tree.getroot())).toprettyxml(indent="   ")
-        with open(outFile, "w", encoding="UTF-8") as f:
-            f.write(xmlstr)
-
-def ExpandPath( path ):
-    return os.path.expandvars( os.path.expanduser(path) )
-
 def ReadAtLeastOneFromArchive(archive, fileList):
     for file in fileList:
         try:
@@ -167,7 +142,6 @@ def ExtractPlaceId(url):
         return None
 
     return match.group(1)
-
 
 def WebRequest(url):
     try:
@@ -314,8 +288,8 @@ def main():
         outFile = '/storage/emulated/0/Android/data/net.osmand.plus/files/tracks/import/GoogleMapsExport.gpx'
         prettyXmlOutput = False #toprettyxml is broken for QPython3
 
-    srcPath = ExpandPath(srcPath)
-    outFile = ExpandPath(outFile)
+    srcPath = util.ExpandPath(srcPath)
+    outFile = util.ExpandPath(outFile)
 
     srcFile = FindFile(srcPath)
 
@@ -386,7 +360,7 @@ def main():
         ExportPoint(root, l.coords, pi)
 
     print( "Exported {} waypoints".format(len(root)) )
-    WriteXML( tree, outFile, prettyXmlOutput )
+    util.WriteXML( tree, outFile, prettyXmlOutput )
     print( "Saved to '{}'".format(outFile) )
 
 if __name__ == '__main__':

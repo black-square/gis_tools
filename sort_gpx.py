@@ -3,23 +3,20 @@
 
 import sys
 import xml.etree.ElementTree as ET
+import util
 
-def sortchildrenby(parent, attr):
+def sortchildrenby(parent):
     def sortlmb( child ):
-      name = child.find(attr)
-      
-      if name is None:
-          print('<{} lat="{}" lon="{}"'.format(child.tag, child.get('lat'), child.get('lon')))
-
-      return child.find(attr).text
+      coords = [float(child.get('lat')), float(child.get('lon'))]
+      return util.Distance(coords, [0, 0])
       
     res = sorted(parent, key=sortlmb)
     parent[:] = res
    
-tree = ET.parse(sys.argv[1])
-root = tree.getroot()
+root = ET.fromstring(ET.canonicalize(util.read_file(sys.argv[1]), strip_text=True))
+tree = ET.ElementTree(root)
 
-sortchildrenby(root, 'name')
+sortchildrenby(root)
 
 for e in root:
     ext = e.find('extensions')
@@ -27,5 +24,4 @@ for e in root:
     if ext is not None:
       e.remove(ext)
     
-
-tree.write(sys.argv[2], encoding="UTF-8", xml_declaration=True)
+util.WriteXML(tree, sys.argv[2], prettyXmlOutput=True)

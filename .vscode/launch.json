@@ -3,7 +3,7 @@
     "configurations": [
        {
             "name": "json2gpx",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "stopOnEntry": false,
             "python": "${command:python.interpreterPath}",
@@ -19,8 +19,20 @@
             ]
         },
         {
+            "name": "Python: Current File",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "args": [
+                "%userprofile%/Downloads/GoogleMapsExport.gpx", 
+                "%userprofile%/Downloads/GoogleMapsExport2.gpx"
+            ],
+        },
+        {
             "name": "Python",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "stopOnEntry": false,
             "python": "${command:python.interpreterPath}",
