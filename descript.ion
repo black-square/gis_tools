@@ -1,1 +1,0 @@
-geo_exif.py py -3 -m pip install --upgrade pip\npy -3 -m pip install exifread pandas geopy\nÂ

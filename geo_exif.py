@@ -1,3 +1,12 @@
+# py -3 -m pip install --upgrade pip
+# py -3 -m pip install exifread pandas geopy
+
+# HEIC read error: 
+#   File "c:\Python39Miniconda\lib\site-packages\exifread\heic.py", line 171, in get_parser
+#     return defs[box.name]
+# KeyError: 'hdlr'
+# Solution: py -3 -m pip install -U "exifread<3"
+
 import argparse
 import exifread
 import webbrowser
