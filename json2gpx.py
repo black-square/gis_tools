@@ -145,7 +145,8 @@ def ExtractPlaceId(url):
 
 def WebRequest(url):
     try:
-        print("Requesting content from url: ", url.replace(GOOGLE_MAPS_KEY, "*******"), " ... ", end=' ')
+        print_url = url.replace(GOOGLE_MAPS_KEY, "*******") if GOOGLE_MAPS_KEY else url   
+        print("Requesting content from url: ", print_url, " ... ", end=' ')
         print('OK')
         return urllib.request.urlopen(url).read().decode()
     except Exception as e:
@@ -285,7 +286,7 @@ def main():
         prettyXmlOutput = True
     else:
         srcPath = '/storage/emulated/0/Download/'
-        outFile = '/storage/emulated/0/Android/data/net.osmand.plus/files/tracks/import/GoogleMapsExport.gpx'
+        outFile = srcPath + 'GoogleMapsExport.gpx'
         prettyXmlOutput = False #toprettyxml is broken for QPython3
 
     srcPath = util.ExpandPath(srcPath)
@@ -310,7 +311,7 @@ def main():
 
     try:
         global GOOGLE_MAPS_KEY
-        GOOGLE_MAPS_KEY = util.read_file("~/.ssh/google_maps_key.txt")
+        GOOGLE_MAPS_KEY = util.read_file("~/.ssh/google_maps_key.txt").strip()
     except FileNotFoundError as e:
         print("Google Maps API key hasn't been found: ", str(e))
 

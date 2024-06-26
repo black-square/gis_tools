@@ -4,6 +4,9 @@ import math
 from urllib.parse import urlsplit, urlunsplit, quote
 from xml.dom import minidom
 import xml.etree.ElementTree as ET
+from platform import platform
+
+IsAndroid = 'android' in platform().lower()
 
 def Distance(coords1, coords2):
     #Haversine formula
@@ -19,7 +22,10 @@ def Distance(coords1, coords2):
     return 12742000 * math.asin(math.sqrt(a))
 
 def ExpandPath( path ):
-    return os.path.expandvars( os.path.expanduser(path) )
+    if IsAndroid:
+        return path.replace('~', os.path.dirname(os.path.abspath(__file__)) )
+    else:
+        return os.path.expandvars( os.path.expanduser(path) )
 
 def read_file(file_name):
     with open(ExpandPath(file_name), 'r', encoding="utf-8") as f:
